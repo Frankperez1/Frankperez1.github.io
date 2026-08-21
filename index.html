@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b5cab" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Inventario - Trabajador</title>
+    <link rel="stylesheet" href="styles.css?v=4" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Módulo de trabajador</p>
+          <h1>Inventario de bienes</h1>
+        </div>
+        <span class="online">● Listo para registrar</span>
+      </header>
+
+      <section class="card location-card" aria-labelledby="location-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Ubicación de trabajo</p>
+            <h2 id="location-title">Seleccione el ambiente</h2>
+          </div>
+          <button id="new-room-button" class="button button-secondary" type="button">+ Ambiente</button>
+        </div>
+        <div class="location-grid">
+          <label>Local
+            <select id="local-select"></select>
+          </label>
+          <label>Área
+            <select id="area-select"></select>
+          </label>
+          <label>Ambiente
+            <select id="room-select"></select>
+          </label>
+        </div>
+        <div class="room-actions">
+          <button id="previous-room" class="button button-secondary" type="button">← Anterior</button>
+          <button id="edit-room-button" class="button button-secondary" type="button">Editar ambiente</button>
+          <button id="next-room" class="button button-secondary" type="button">Siguiente →</button>
+        </div>
+        <div class="start-actions">
+          <button id="start-inventory-button" class="button button-primary" type="button">▶ Iniciar inventario</button>
+          <p id="session-message" class="session-message" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="scan-card" class="card scan-card" aria-labelledby="scan-title" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Registro rápido</p>
+            <h2 id="scan-title">Escanee o digite el código</h2>
+          </div>
+          <button id="camera-button" class="button button-primary" type="button">Abrir cámara</button>
+        </div>
+        <form id="code-form" class="code-form">
+          <input id="code-input" autocomplete="off" inputmode="numeric" placeholder="Código patrimonial" aria-label="Código patrimonial" />
+          <button class="button button-primary" type="submit">Buscar y registrar</button>
+        </form>
+        <div id="reader" class="reader" hidden></div>
+        <p id="scan-message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card inventory-card" aria-labelledby="inventory-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Bienes registrados</p>
+            <h2 id="inventory-title">Inventario del ambiente</h2>
+          </div>
+          <div class="exports">
+            <button id="finish-inventory-button" class="button button-primary" type="button">Finalizar inventario</button>
+            <button id="clear-excel-button" class="button button-danger" type="button">Borrar datos Excel</button>
+            <input id="excel-import-input" type="file" accept=".xlsx,.xls,.csv" hidden />
+            <button id="import-excel-button" class="button button-secondary" type="button">Importar Excel</button>
+            <button id="excel-button" class="button button-secondary" type="button">Excel</button>
+            <button id="pdf-button" class="button button-secondary" type="button">PDF</button>
+          </div>
+        </div>
+        <p class="import-help">Importe un archivo .xlsx, .xls o .csv. Columnas admitidas: Local, Área, Ambiente, Código patrimonial, Tipo de bien, Detalle técnico y Estado.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Ítem</th><th>Código patrimonial</th><th>Tipo de bien</th><th>Detalle técnico</th><th>Ubicación registrada</th><th>Estado</th><th>Acción</th></tr></thead>
+            <tbody id="inventory-body"></tbody>
+          </table>
+        </div>
+        <p id="empty-message" class="empty-message">Aún no hay bienes registrados en este ambiente.</p>
+      </section>
+    </main>
+
+    <dialog id="room-dialog">
+      <form id="room-form" method="dialog">
+        <h2 id="dialog-title">Nuevo ambiente</h2>
+        <label>Nombre del ambiente<input id="room-name-input" required maxlength="100" placeholder="Ej.: Aula 304" /></label>
+        <menu><button id="cancel-room" class="button button-secondary" value="cancel" type="button">Cancelar</button><button class="button button-primary" value="default" type="submit">Guardar</button></menu>
+      </form>
+    </dialog>
+
+    <dialog id="encargados-dialog">
+      <form id="encargados-form" method="dialog">
+        <h2>Responsable(s) del inventario</h2>
+        <label>Nombre(s) del encargado o encargados<input id="encargados-input" required maxlength="200" placeholder="Ej.: Juan Pérez, María Gómez" /></label>
+        <menu><button id="cancel-encargados" class="button button-secondary" value="cancel" type="button">Cancelar</button><button class="button button-primary" value="default" type="submit">Iniciar inventario</button></menu>
+      </form>
+    </dialog>
+
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+    <script src="logo-data.js?v=4" defer></script>
+    <script src="app.js?v=4" defer></script>
+  </body>
+</html>
